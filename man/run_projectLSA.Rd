@@ -7,8 +7,14 @@
 run_projectLSA()
 }
 \value{
-Launches the Shiny application in the default web browser.
+Launches a Shiny application (no return value)
 }
 \description{
 This function starts the Shiny app included in the projectLSA package.
+}
+\examples{
+if (interactive()) {
+  projectLSA::run_projectLSA()
+}
+
 }
