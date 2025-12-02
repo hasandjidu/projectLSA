@@ -9,5 +9,5 @@
   - Exploratory Factor Analysis (EFA)
   - Confirmatory Factor Analysis (CFA)
 * Includes interactive visualizations, downloadable outputs, and built-in example datasets.
-* Provides `run_app()` as the main entry point.
+* Provides `run_projectLSA()` as the main entry point.
 
