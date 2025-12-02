@@ -18,3 +18,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+URL: https://github.com/hasandjidu/projectLSA
+BugReports: https://github.com/hasandjidu/projectLSA/issues
