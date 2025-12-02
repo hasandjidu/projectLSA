@@ -9,7 +9,6 @@ Authors@R:
       person("Haryanto", "", role = "ctb")
     )
 Description: Provides a comprehensive and interactive Shiny interface for conducting Latent Structure Analysis (LSA). The application integrates Latent Profile Analysis (LPA), Latent Class Analysis (LCA), Latent Trait Analysis (LTA / IRT), Exploratory Factor Analysis (EFA), and Confirmatory Factor Analysis (CFA) into a unified workflow. Users can upload their own data or use built-in datasets, fit multiple models, compare fit indices, visualize results interactively, and export outputs, all without requiring any coding.
-
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
