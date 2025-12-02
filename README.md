@@ -81,8 +81,7 @@ upload, built-in datasets, interactive plots, and reporting features.
 
 ## Example Screenshots
 
-*(Place images inside `man/figures/` if needed. Example placeholder:)*
-# projectLSA <img src="man/figures/lpa_example.png" align="center" width="120" />
+ <img src="man/figures/lpa_example.png" align="center" width="120" />
 
     ![LPA interface](man/figures/lpa_example.png)
 
