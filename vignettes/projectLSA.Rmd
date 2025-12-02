@@ -1,0 +1,133 @@
+---
+title: "Introduction to projectLSA"
+output:
+  rmarkdown::html_vignette:
+    df_print: paged
+vignette: >
+  %\VignetteIndexEntry{Introduction to projectLSA}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Overview
+
+`projectLSA` provides a unified Shiny-based environment for conducting **Latent Structure Analysis (LSA)**, including:
+
+- Latent Profile Analysis (LPA)
+- Latent Class Analysis (LCA)
+- Latent Trait Analysis (LTA / IRT)
+- Exploratory Factor Analysis (EFA)
+- Confirmatory Factor Analysis (CFA)
+
+The package is designed for users who prefer a graphical workflow without writing code, while still leveraging
+robust statistical methodologies implemented in well-established R packages.
+
+---
+
+# Installation
+
+```r
+install.packages("projectLSA")     # CRAN version (once released)
+library(projectLSA)
+```
+
+---
+
+# Launching the Application
+
+```r
+library(projectLSA)
+run_app()
+```
+
+This will open the full Shiny interface, where you can upload data, choose an analysis module, and generate results.
+
+---
+
+# Modules Included
+
+## 1. Latent Profile Analysis (LPA)
+- Fit multiple models with varying profile numbers
+- Compare AIC, BIC, entropy, and class sizes
+- Visualize best model with custom profile names
+
+## 2. Latent Class Analysis (LCA)
+- Designed for categorical indicators
+- Simulated and uploaded datasets supported
+- Class probability tables and interactive visualizations
+
+## 3. Latent Trait Analysis (LTA / IRT)
+- Supports dichotomous and polytomous items
+- Rasch / 2PL / 3PL and graded models
+- Item information curves, test information, and multi-dimensional visualizations
+
+## 4. Exploratory Factor Analysis (EFA)
+- KMO test, Bartlett test, and parallel analysis
+- Loading matrices, rotation, and factor scores
+- Auto-generated interpretation summaries
+
+## 5. Confirmatory Factor Analysis (CFA)
+- Lavaan syntax editor
+- Fit indices, loadings, modification indices
+- SEM path diagram with customizable styles
+
+---
+
+# Example Workflow
+
+Below is a simple workflow using the built-in datasets.
+
+```r
+library(projectLSA)
+
+# Launch the GUI
+run_app()
+```
+
+Once inside the GUI:
+
+1. Choose a module (e.g., LPA)
+2. Upload your dataset or select a built-in dataset
+3. Choose variables and model settings
+4. Fit the models and explore the outputs
+
+---
+
+# Built-in Example Datasets
+
+The package includes several example datasets:
+
+- **pisaUSA15** — student motivation indicators
+- **curry_mac** — moral relevance & judgment (simulated)
+- **id_edu** — longitudinal educational identity (simulated)
+
+These are accessible from within the Shiny interface.
+
+---
+
+# Reproducibility and Reporting
+
+`projectLSA` provides:
+
+- Exportable tables (CSV, Excel)
+- Downloadable graphics (PNG)
+- Reproducible summaries and model comparisons
+
+This ensures results produced through the GUI can be published or documented with confidence.
+
+---
+
+# Citation
+
+Please cite this package as:
+
+Djidu, H., Retnawati, H., Hadi, S., & Haryanto (2025).
+*projectLSA: An R Shiny application for latent structure analysis with a graphical user interface.*
+
+---
+
+# Session Info
+
+```r
+sessionInfo()
+```

@@ -1,0 +1,20 @@
+Package: projectLSA
+Title: projectLSA: Latent Structure Analysis Toolkit
+Version: 0.0.1
+Authors@R: 
+    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
+Description: A toolkit for Latent Profile Analysis (LPA), Latent Trait
+    Analysis (LTA / IRT), Latent Class Analysis (LCA), Exploratory and
+    Confirmatory Factor Analysis (EFA/CFA), integrated in a unified Shiny
+    dashboard for educational assessment.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports: 
+    shiny
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
