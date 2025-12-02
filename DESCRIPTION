@@ -1,25 +1,61 @@
-Package: projectLSA
+projectLSA
+Type: Packages
 Title: projectLSA: Latent Structure Analysis Toolkit
 Version: 0.0.1
 Authors@R:
     c(
-      person("Hasan", "Djidu", email = "hasandjidu@gmail.com", role = c("aut", "cre")),
-      person("Heri", "Retnawati", role = "ctb"),
-      person("Samsul", "Hadi", role = "ctb"),
-      person("Haryanto", "", role = "ctb")
+      person(
+        given = "Hasan",
+        family = "Djidu",
+        email = "hasandjidu@gmail.com",
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0003-1110-6815")
+      ),
+      person(
+        given = "Heri",
+        family = "Retnawati",
+        role = "ctb",
+        comment = c(ORCID = "0000-0002-1792-5873")
+      ),
+      person(
+        given = "Samsul",
+        family = "Hadi",
+        role = "ctb",
+        comment = c(ORCID = "0000-0003-3437-2542")
+      ),
+      person(
+        given = "Haryanto",
+        family = "",
+        role = "ctb",
+        comment = c(ORCID = "0000-0003-3322-904X")
+      )
     )
 Description: Provides a comprehensive and interactive Shiny interface for conducting Latent Structure Analysis (LSA). The application integrates Latent Profile Analysis (LPA), Latent Class Analysis (LCA), Latent Trait Analysis (LTA / IRT), Exploratory Factor Analysis (EFA), and Confirmatory Factor Analysis (CFA) into a unified workflow. Users can upload their own data or use built-in datasets, fit multiple models, compare fit indices, visualize results interactively, and export outputs, all without requiring any coding.
-
 License: MIT + file LICENSE
+Depends:
+    R (>= 4.0.0)
 Encoding: UTF-8
-LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
-Imports: 
-    shiny
+Imports:
+    shiny,
+    shinyWidgets,
+    DT,
+    ggplot2,
+    dplyr,
+    tidyr,
+    stringr,
+    readxl,
+    plotly,
+    lavaan,
+    psych,
+    mirt,
+    poLCA,
+    ggiraph
 Suggests: 
     knitr,
     rmarkdown
+LazyData: false
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 URL: https://github.com/hasandjidu/projectLSA
 BugReports: https://github.com/hasandjidu/projectLSA/issues
