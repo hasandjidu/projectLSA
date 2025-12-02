@@ -36,20 +36,7 @@ Depends:
     R (>= 4.0.0)
 Encoding: UTF-8
 Imports:
-    shiny,
-    shinyWidgets,
-    DT,
-    ggplot2,
-    dplyr,
-    tidyr,
-    stringr,
-    readxl,
-    plotly,
-    lavaan,
-    psych,
-    mirt,
-    poLCA,
-    ggiraph
+    shiny
 Suggests: 
     knitr,
     rmarkdown
