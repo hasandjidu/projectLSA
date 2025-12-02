@@ -36,9 +36,34 @@ Depends:
     R (>= 4.0.0)
 Encoding: UTF-8
 Imports:
-    shiny
-Suggests: 
+    colourpicker,
+    dplyr,
+    DT,
+    ggiraph,
+    ggplot2,
+    lavaan,
+    mirt,
+    plotly,
+    poLCA,
+    psych,
+    purrr,
+    readr,
+    readxl,
+    rlang,
+    semPlot,
+    semptools,
+    semTools,
+    shiny,
+    shinyWidgets,
+    stringr,
+    tibble,
+    tidyr,
+    tidyLPA,
+    viridisLite
+Suggests:
+    devtools,
     knitr,
+    pkgdown,
     rmarkdown
 LazyData: false
 Roxygen: list(markdown = TRUE)
