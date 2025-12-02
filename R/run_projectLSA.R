@@ -2,7 +2,12 @@
 #'
 #' This function starts the Shiny app included in the projectLSA package.
 #'
-#' @return Launches the Shiny application in the default web browser.
+#' @return Launches a Shiny application (no return value)
+#' @examples
+#' if (interactive()) {
+#'   projectLSA::run_projectLSA()
+#' }
+#'
 #' @export
 run_projectLSA <- function() {
   app_dir <- system.file("app", package = "projectLSA")
