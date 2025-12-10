@@ -20,7 +20,7 @@ package accessible for researchers, students, and applied analysts.
 ## Installation
 
 ``` r
-# Install from CRAN (when available)
+# Install from CRAN
 install.packages("projectLSA")
 
 # Install development version from GitHub (optional)
