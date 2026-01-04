@@ -98,40 +98,37 @@ upload, built-in datasets, interactive plots, and reporting features.
 
 ## Example Screenshots
 
-    ## LPA (Latent Profile Analysis)
-    ![LPA1](man/figures/LPA1.png)
-    ![LPA2](man/figures/LPA2.png)
-    ![LPA3](man/figures/LPA3.png)
-    ![LPA4](man/figures/LPA4.png)
-    ![LPA5](man/figures/LPA5.png)
+### LPA (Latent Profile Analysis)
 
-    ## LCA (Latent Class Analysis)
-    ![LCA1](man/figures/LCA1.png)
-    ![LCA2](man/figures/LCA2.png)
-    ![LCA3](man/figures/LCA3.png)
-    ![LCA4](man/figures/LCA4.png)
+![LPA1](man/figures/LPA1.png) ![LPA2](man/figures/LPA2.png)
+![LPA3](man/figures/LPA3.png) ![LPA4](man/figures/LPA4.png)
+![LPA5](man/figures/LPA5.png)
 
-    ## CFA (Confirmatory Factor Analysis)
-    ![CFA1](man/figures/CFA1.png)
-    ![CFA2](man/figures/CFA2.png)
-    ![CFA3](man/figures/CFA3.png)
-    ![CFA4](man/figures/CFA4.png)
-    ![CFA5](man/figures/CFA5.png)
-    ![CFA6](man/figures/CFA6.png)
-    ![CFA7](man/figures/CFA7.png)
-    ![CFA8](man/figures/CFA8.png)
-    ![CFA9](man/figures/CFA9.png)
+### LCA (Latent Class Analysis)
 
-    ## SEM
-    ![SEM](man/figures/SEM.png)
+![LCA1](man/figures/LCA1.png) ![LCA2](man/figures/LCA2.png)
+![LCA3](man/figures/LCA3.png) ![LCA4](man/figures/LCA4.png)
 
-    ## LTA (Latent Transition Analysis)
-    ![LTA1](man/figures/LTA1.png)
-    ![LTA2](man/figures/LTA2.png)
-    ![LTA3](man/figures/LTA3.png)
-    ![LTA4](man/figures/LTA4.png)
-    ![LTA5](man/figures/LTA5.png)
-    ![LTA6](man/figures/LTA6.png)
+### CFA (Confirmatory Factor Analysis)
+
+![CFA1](man/figures/CFA1.png) ![CFA2](man/figures/CFA2.png)
+![CFA3](man/figures/CFA3.png) ![CFA4](man/figures/CFA4.png)
+![CFA5](man/figures/CFA5.png) ![CFA6](man/figures/CFA6.png)
+![CFA7](man/figures/CFA7.png) ![CFA8](man/figures/CFA8.png)
+![CFA9](man/figures/CFA9.png)
+
+### SEM (Structural Equation Modelling)
+
+<figure>
+<img src="man/figures/SEM.png" alt="SEM" />
+<figcaption aria-hidden="true">SEM</figcaption>
+</figure>
+
+### LTA (Latent Trait Analysis/ IRT)
+
+![LTA1](man/figures/LTA1.png) ![LTA2](man/figures/LTA2.png)
+![LTA3](man/figures/LTA3.png) ![LTA4](man/figures/LTA4.png)
+![LTA5](man/figures/LTA5.png) ![LTA6](man/figures/LTA6.png)
 
 ------------------------------------------------------------------------
 
@@ -139,9 +136,9 @@ upload, built-in datasets, interactive plots, and reporting features.
 
 If you use projectLSA in publications, please cite:
 
-Djidu, H., Retnawati, H., Hadi, S., & Haryanto (2026). *projectLSA: An R
+Djidu, H., Retnawati, H., Hadi, S., & Haryanto (2026). *projectLSA:R
 Shiny application for latent structure analysis with a graphical user
-interface.*
+interface. <https://doi.org/10.32614/CRAN.package.projectLSA>*
 
 ------------------------------------------------------------------------
 

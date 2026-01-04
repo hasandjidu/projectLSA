@@ -88,21 +88,22 @@ This opens the full Shiny application, including all LSA modules, data upload, b
 
 ## Example Screenshots
 
-```
-## LPA (Latent Profile Analysis)
+### LPA (Latent Profile Analysis)
+
 ![LPA1](man/figures/LPA1.png)
 ![LPA2](man/figures/LPA2.png)
 ![LPA3](man/figures/LPA3.png)
 ![LPA4](man/figures/LPA4.png)
 ![LPA5](man/figures/LPA5.png)
 
-## LCA (Latent Class Analysis)
+
+### LCA (Latent Class Analysis)
 ![LCA1](man/figures/LCA1.png)
 ![LCA2](man/figures/LCA2.png)
 ![LCA3](man/figures/LCA3.png)
 ![LCA4](man/figures/LCA4.png)
 
-## CFA (Confirmatory Factor Analysis)
+### CFA (Confirmatory Factor Analysis)
 ![CFA1](man/figures/CFA1.png)
 ![CFA2](man/figures/CFA2.png)
 ![CFA3](man/figures/CFA3.png)
@@ -113,18 +114,19 @@ This opens the full Shiny application, including all LSA modules, data upload, b
 ![CFA8](man/figures/CFA8.png)
 ![CFA9](man/figures/CFA9.png)
 
-## SEM
+### SEM (Structural Equation Modelling)
+
 ![SEM](man/figures/SEM.png)
 
-## LTA (Latent Transition Analysis)
+
+### LTA (Latent Trait Analysis/ IRT)
+
 ![LTA1](man/figures/LTA1.png)
 ![LTA2](man/figures/LTA2.png)
 ![LTA3](man/figures/LTA3.png)
 ![LTA4](man/figures/LTA4.png)
 ![LTA5](man/figures/LTA5.png)
 ![LTA6](man/figures/LTA6.png)
-
-```
 
 ---
 
@@ -133,7 +135,7 @@ This opens the full Shiny application, including all LSA modules, data upload, b
 If you use projectLSA in publications, please cite:
 
 Djidu, H., Retnawati, H., Hadi, S., & Haryanto (2026).
-*projectLSA: An R Shiny application for latent structure analysis with a graphical user interface.*
+*projectLSA:R Shiny application for latent structure analysis with a graphical user interface. https://doi.org/10.32614/CRAN.package.projectLSA*
 
 ---
 
