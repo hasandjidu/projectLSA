@@ -59,7 +59,7 @@ server_lta <- function(input, output, session) {
   
   data_lta <- reactive({
     req(input$dimension, input$data_source_lta, data_user(), input$selected_vars, input$fit_stats)
-   data_user() %>% dplyr::select(input$selected_vars)
+    data_user() %>% dplyr::select(input$selected_vars)
   })
   
   # ==== Preview Data ====
@@ -71,16 +71,16 @@ server_lta <- function(input, output, session) {
                   options = list(dom='Brtp',scrollX = TRUE, pageLength = 25,  
                                  buttons = list(
                                    list(extend = 'csv',
-                                     text = 'Export CSV',
-                                     filename = 'Data LTA'
+                                        text = 'Export CSV',
+                                        filename = 'Data LTA'
                                    ),
                                    list(extend = 'excel',
-                                     text = 'Export Excel',
-                                     filename = 'Data LTA'
+                                        text = 'Export Excel',
+                                        filename = 'Data LTA'
                                    ))),
                   rownames = TRUE) %>% 
       formatRound(columns = numeric_cols, digits = 0)
-  })
+  }, server = FALSE)
   output$itemtype_ui <- renderUI({
     req(input$datatype, input$data_source_lta)
     source_type <- if(input$data_source_lta == "upload") {
@@ -89,14 +89,14 @@ server_lta <- function(input, output, session) {
       input$data_source_lta
     }
     choices <- switch(source_type,
-                        "diko" = c("Rasch" = "Rasch",
-                                   "2-Parameter Logistic (2-PL)" = "2PL",
-                                   "3-Parameter Logistic (3-PL)" = "3PL"),
-                        "poli" = c("Partial Credit Model (PCM)" = "Rasch",
-                                   "Graded Response Model (GRM)" = "graded",
-                                   "Generalized PCM (GPCM)" = "gpcm")
-                      )
-
+                      "diko" = c("Rasch" = "Rasch",
+                                 "2-Parameter Logistic (2-PL)" = "2PL",
+                                 "3-Parameter Logistic (3-PL)" = "3PL"),
+                      "poli" = c("Partial Credit Model (PCM)" = "Rasch",
+                                 "Graded Response Model (GRM)" = "graded",
+                                 "Generalized PCM (GPCM)" = "gpcm")
+    )
+    
     div(
       class = "select-large", # styling selector
       selectInput(
@@ -121,7 +121,7 @@ server_lta <- function(input, output, session) {
     req(input$data_source_lta, input$dimension=="multi")
     model_text <- switch(input$data_source_lta,
                          # === 1. Multidimensional - Dichotomous ===
-"diko" = "
+                         "diko" = "
 # Example 1: Multidimensional - Dichotomous (2 dimensions)
 model <- '
 F1 = 1-5
@@ -188,8 +188,8 @@ F2 = 6-10
     
     fit_results <- list()
     for (item in itemtypes) {
-        mod <- run_mirt_model(df, model_def, item)
-        if (is.null(mod)) next
+      mod <- run_mirt_model(df, model_def, item)
+      if (is.null(mod)) next
       measures <- tryCatch({
         as.data.frame(anova(mod))
       }, error = function(e) data.frame())
@@ -217,7 +217,7 @@ F2 = 6-10
         N_LD <- length(unique_items)
         list(N_LocalDependency = N_LD,
              item_LocalDep = unique_items
-             )
+        )
       }, error = function(e) {
         list(N_violations = NULL, itemLD = NA)}
       )
@@ -248,7 +248,7 @@ F2 = 6-10
              )
       ))
     removeModal()
-
+    
     cur <- lta_fit_list()
     cur <- modifyList(cur, fit_results)
     best_name <- input$itemtype
@@ -265,9 +265,9 @@ F2 = 6-10
     lta_current_id(best_id)
     
     showNotification(paste0("LTA finished. Selected model: ", best_name), type = "message")
-   
+    
   })
- 
+  
   output$fit_comparison <- renderUI({
     req(data_lta(), input$selected_vars, input$fit_stats, lta_fit_list())
     source_type <- if(input$data_source_lta == "upload") {
@@ -298,18 +298,18 @@ F2 = 6-10
         SABIC = round(SABIC, 2),
         BIC   = round(BIC, 2),
         HQ    = round(HQ, 2),
-       logLik = round(logLik,2),
-       `χ²` = round(`χ²`,2),
-       df=df,
-       `p (χ²)` = case_when(
-         is.na(p (`p (χ²)`)) ~ NA_character_,
-         `p (χ²)` < 0.01 ~ "p <.01",
-         `p (χ²)` < 0.05  ~ "p <.05",
-         TRUE      ~ "p >.05"
-       ),
+        logLik = round(logLik,2),
+        `χ²` = round(`χ²`,2),
+        df=df,
+        `p (χ²)` = case_when(
+          is.na(p (`p (χ²)`)) ~ NA_character_,
+          `p (χ²)` < 0.01 ~ "p <.01",
+          `p (χ²)` < 0.05  ~ "p <.05",
+          TRUE      ~ "p >.05"
+        ),
         N_itemfit =  N_itemfit,
         N_itemLD = N_itemLD     
-        )
+      )
     min_AIC   <- min(comparison$AIC, na.rm = TRUE)
     min_SABIC <- min(comparison$SABIC, na.rm = TRUE)
     min_BIC   <- min(comparison$BIC, na.rm = TRUE)
@@ -436,74 +436,74 @@ F2 = 6-10
                       color = styleInterval(0.04999999, c('red', 'green'))
       )
   })
-
-
-output$icc_info <- renderUI({
-  req(input$dimension, selected_fit() )
-  nfactors <- selected_fit()@Model$nfact
-  if (input$dimension =='uni')
+  
+  
+  output$icc_info <- renderUI({
+    req(input$dimension, selected_fit() )
+    nfactors <- selected_fit()@Model$nfact
+    if (input$dimension =='uni')
     {
-    column(12,
-    column(6,
-           plotOutput('icc'),
-           uiOutput('select_icc'),    
-           ),
-    column(6, plotOutput('infose')))
-  } else if (input$dimension =='multi' && nfactors == 2 ) {
-    column(12,
-           plotOutput('icc'),
-           uiOutput('select_icc'),  
-           uiOutput("info_ui_multi")
-           )
-  }
-  else if (input$dimension =='multi' && nfactors >= 3 )
-  {
-    column(12,
-           uiOutput("info_ui_multi")
-    )
-           }
-  else{return(NULL)}
+      column(12,
+             column(6,
+                    plotOutput('icc'),
+                    uiOutput('select_icc'),    
+             ),
+             column(6, plotOutput('infose')))
+    } else if (input$dimension =='multi' && nfactors == 2 ) {
+      column(12,
+             plotOutput('icc'),
+             uiOutput('select_icc'),  
+             uiOutput("info_ui_multi")
+      )
+    }
+    else if (input$dimension =='multi' && nfactors >= 3 )
+    {
+      column(12,
+             uiOutput("info_ui_multi")
+      )
+    }
+    else{return(NULL)}
   })
   
-output$select_icc <- renderUI({
-  req(data_lta())
-  choices <- c('SELECT ALL',names(data_lta()))
-  div(class = "select-mini", 
-  selectInput("item_select_icc", NULL, choices = choices, multiple = TRUE, selected = 'SELECT ALL', width = '100%'))
-}) 
-observeEvent(input$item_select_icc, {
-  req(input$item_select_icc)
-  selected <- input$item_select_icc
-  # Jika "All_Item" dipilih bersama dengan yang lain, sisakan hanya "All_Item"
-  if ("SELECT ALL" %in% selected && length(selected) > 1) {
-    # Jika "All_Item" baru saja diklik, hapus item lain
-    if (tail(selected, 1) == "SELECT ALL") {
-      updateSelectInput(session, "item_select_icc", selected = "SELECT ALL")
-    } else {
-      # Jika item lain baru diklik saat All_Item aktif, hapus All_Item
-      updateSelectInput(session, "item_select_icc", selected = setdiff(selected, "SELECT ALL"))
+  output$select_icc <- renderUI({
+    req(data_lta())
+    choices <- c('SELECT ALL',names(data_lta()))
+    div(class = "select-mini", 
+        selectInput("item_select_icc", NULL, choices = choices, multiple = TRUE, selected = 'SELECT ALL', width = '100%'))
+  }) 
+  observeEvent(input$item_select_icc, {
+    req(input$item_select_icc)
+    selected <- input$item_select_icc
+    # Jika "All_Item" dipilih bersama dengan yang lain, sisakan hanya "All_Item"
+    if ("SELECT ALL" %in% selected && length(selected) > 1) {
+      # Jika "All_Item" baru saja diklik, hapus item lain
+      if (tail(selected, 1) == "SELECT ALL") {
+        updateSelectInput(session, "item_select_icc", selected = "SELECT ALL")
+      } else {
+        # Jika item lain baru diklik saat All_Item aktif, hapus All_Item
+        updateSelectInput(session, "item_select_icc", selected = setdiff(selected, "SELECT ALL"))
+      }
     }
-  }
-})
-
-  # === ICC Plot (reactive to itemtype) ===
-output$icc <- renderPlot({
-  req(selected_fit())
-  req(input$item_select_icc)
+  })
   
-  all_names <- names(data_lta())         # urutan nama sesuai choices
-  if ("SELECT ALL" %in% input$item_select_icc) {
-    which_idx <- seq_along(all_names)
-  } else {
-    # ambil indeks dari nama yang dipilih (preserve urutan as in all_names)
-    which_idx <- which(all_names %in% input$item_select_icc)
-    # optional: jika pengguna memilih nama yang tidak ada (safety), bail out
-    if (length(which_idx) == 0) return()
-  }
-  # plot mirt: gunakan which.items untuk menyebutkan indeks item
-  mirt::plot(selected_fit(), type = "trace", which.items = which_idx,
-       main = paste("ICC -", input$itemtype))
-})
+  # === ICC Plot (reactive to itemtype) ===
+  output$icc <- renderPlot({
+    req(selected_fit())
+    req(input$item_select_icc)
+    
+    all_names <- names(data_lta())         # urutan nama sesuai choices
+    if ("SELECT ALL" %in% input$item_select_icc) {
+      which_idx <- seq_along(all_names)
+    } else {
+      # ambil indeks dari nama yang dipilih (preserve urutan as in all_names)
+      which_idx <- which(all_names %in% input$item_select_icc)
+      # optional: jika pengguna memilih nama yang tidak ada (safety), bail out
+      if (length(which_idx) == 0) return()
+    }
+    # plot mirt: gunakan which.items untuk menyebutkan indeks item
+    mirt::plot(selected_fit(), type = "trace", which.items = which_idx,
+               main = paste("ICC -", input$itemtype))
+  })
   
   # === IIF Plot (reactive to itemtype, using custom function) ===
   output$infose <- renderPlot({
@@ -526,41 +526,208 @@ output$icc <- renderPlot({
     req(input$dimension == "multi")
     infoVisServer("info1", model_reactive = reactive({ selected_fit() }))
   })
- 
+  
   # ==== Factor Score ====
-  output$fscoreLTA <- renderUI({
+  fscore_data <- reactive({
     req(selected_fit())
-    df <- tryCatch({
+    
+    tryCatch({
       as.data.frame(fscores(selected_fit(), method = "EAP", full.scores = TRUE))
     }, error = function(e) data.frame())
-    
+  })
+  
+  output$fscoreLTA <- renderUI({
+    df <- fscore_data()
     req(nrow(df) > 0)
+    
     numeric_cols <- which(sapply(df, is.numeric))
+    
     tagList(
-      DT::datatable(
-        df, extensions = 'Buttons',
-        options = list(scrollX = TRUE, pageLength = 25,  dom = 'Brtp', 
-                       buttons = list(
-                         list(
-                           extend = 'csv',
-                           text = 'Export CSV',
-                           filename = paste0('Factor Scores-',input$itemtype)
-                         ),
-                         list(
-                           extend = 'excel',
-                           text = 'Export Excel',
-                           filename = paste0('Factor Scores-',input$itemtype)
-                         ))),
-        rownames = TRUE
-      ) %>%
-        formatRound(columns = numeric_cols, digits = 2) %>%
-        DT::formatStyle(
-          columns = numeric_cols,
-          fontWeight = 'bold',
-          color = styleInterval(c(-1, 1), c('red', 'gold', 'green'))
-        )
-
+      column(
+        6,
+        DTOutput("fscore_table")
+      ),
+      
+      column(
+        6,
+        br(),
+        numericInput("n_kat", "Number of Factor Score Category:", value = 3, min = 2, max = 10),
+        uiOutput("cutoff_inputs"),
+        lapply(numeric_cols, function(i) {
+          plotname <- paste0("fscore_donut_", i)
+          div(
+            style = "margin-bottom: 20px;",   # jarak antar-plot
+            plotOutput(plotname, height = 280)
+          )
+        })
+      )
     )
   })
-
+  output$fscore_table <- DT::renderDT({
+    df <- fscore_data()
+    req(nrow(df) > 0)
+    
+    numeric_cols <- which(sapply(df, is.numeric))
+    
+    DT::datatable(
+      df,
+      extensions = "Buttons",
+      options = list(
+        scrollX = TRUE,
+        pageLength = nrow(df),
+        dom = "Brtp",
+        buttons = list(
+          list(
+            extend = "csv",
+            text = "Export CSV",
+            filename = paste0("Factor Scores-", input$itemtype),
+            exportOptions = list(modifier = list(page = "all"))
+          ),
+          list(
+            extend = "excel",
+            text = "Export Excel",
+            filename = paste0("Factor Scores-", input$itemtype),
+            exportOptions = list(modifier = list(page = "all"))
+          )
+        )
+      ),
+      rownames = TRUE
+    ) %>%
+      formatRound(columns = numeric_cols, digits = 2) %>%
+      DT::formatStyle(
+        columns = numeric_cols,
+        fontWeight = "bold"      )
+  }, server = FALSE)
+  output$cutoff_inputs <- renderUI({
+    req(input$n_kat)
+    
+    n_cut <- input$n_kat - 1
+    
+    tagList(
+      lapply(1:n_cut, function(i) {
+        
+        div(
+          style = "display: inline-block; margin-right: 10px;",
+          numericInput(
+            paste0("cut_", i),
+            label = paste("Cut-off", i),
+            value = NA,
+            step = 0.01,
+            width = "70px"   # small width
+          )
+        )
+        
+      })
+    )
+  })
+  observe({
+    df <- fscore_data()
+    req(nrow(df) > 0)
+    
+    numeric_cols <- which(sapply(df, is.numeric))
+    
+    n_kat <- input$n_kat   # default 3 kategori
+    
+    lapply(seq_along(numeric_cols), function(idx) {
+      local({
+        col_index <- numeric_cols[idx]
+        plotname  <- paste0("fscore_donut_", col_index)
+        output[[plotname]] <- renderPlot({
+          
+          scores <- df[[col_index]]
+          n_kat <- input$n_kat
+          n_cut <- n_kat - 1
+          
+          # Ambil cut-off manual
+          cutoffs <- numeric(0)
+          for (i in 1:n_cut) {
+            val <- input[[paste0("cut_", i)]]
+            if (!is.null(val) && !is.na(val)) cutoffs <- c(cutoffs, val)
+          }
+          
+          # Jika cut-off belum lengkap → fallback quantile
+          if (length(cutoffs) != n_cut) {
+            cuts <- quantile(scores, probs = seq(0, 1, length.out = n_kat + 1))
+          } else {
+            cuts <- c(min(scores), sort(cutoffs), max(scores))
+          }
+          
+          # Kategorisasi
+          kategori <- cut(scores, breaks = cuts, include.lowest = TRUE, labels = FALSE)
+          
+          # Frekuensi
+          freq <- table(kategori)
+          df_plot <- data.frame(
+            kategori = factor(names(freq)),
+            freq = as.numeric(freq)
+          )
+          
+          df_plot$percent <- df_plot$freq / sum(df_plot$freq) * 100
+          df_plot$label <- paste0(df_plot$freq, " (", round(df_plot$percent), "%)")
+          
+          # ===== Legend label (θ ranges) =====
+          legend_labels <- c()
+          for (i in 1:n_kat) {
+            low  <- cuts[i]
+            high <- cuts[i+1]
+            
+            if (i == 1) {
+              legend_labels[i] <- paste0("θ ≤ ", round(high, 2))
+            } else if (i == n_kat) {
+              legend_labels[i] <- paste0("θ > ", round(low, 2))
+            } else {
+              legend_labels[i] <- paste0(round(low, 2), " < θ ≤ ", round(high, 2))
+            }
+          }
+          
+          # Warna kategori
+          colors <- scales::hue_pal()(n_kat)
+          
+          # ====== PLOT DONUT ======
+          ggplot(df_plot, aes(x = 2, y = freq, fill = kategori)) +
+            
+            # Donut bar
+            geom_col(width = 1, color = "white") +
+            
+            # ===== LABEL DI LUAR DONUT =====
+          geom_text(
+            aes(
+              x = 2.35,   # posisi label lebih keluar dari donut
+              label = label
+            ),
+            position = position_stack(vjust = 0.5),
+            size = 4,
+            fontface = "bold"
+          ) +
+            
+            coord_polar(theta = "y") +
+            scale_fill_manual(
+              values = colors,
+              labels = legend_labels,
+              name = "θ Range"
+            ) +
+            # ===== LABEL DI TENGAH DONUT =====
+          annotate(
+            "text",
+            x = 0.5, 
+            y = 0,
+            label = paste0("F", which(numeric_cols == col_index), "-Score"),
+            size = 6,
+            fontface = "bold"
+          ) +
+            # Maintain the strcuture
+            xlim(0.5, 2.5) +
+            theme_void() +
+            ggtitle(paste0("Factor Score : ", colnames(df)[col_index])) +
+            theme(
+              plot.title = element_text(hjust = 0.5),
+              legend.position = "bottom"
+            )
+        })
+        
+      })
+    })
+  })
+  
+  
 }

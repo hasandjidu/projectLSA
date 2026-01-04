@@ -105,8 +105,7 @@ lta_ui <- function(project) {
       ),
       tabPanel(
         title=tagList(icon("brain"), "Factor Scores"),
-        column(6, uiOutput('fscoreLTA') ),
-        column(6, )
+        column(12, uiOutput('fscoreLTA') )
         
       ),
       # ===== INFO ======

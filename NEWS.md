@@ -1,5 +1,5 @@
 
-# projectLSA 0.0.3
+# projectLSA 0.0.4
 
 * Initial release to CRAN.
 * Includes full Shiny GUI for:

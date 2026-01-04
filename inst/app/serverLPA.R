@@ -2,10 +2,14 @@
 
 server_lpa <- function(input, output, session) {
   library(tidyLPA)
+  library(mclust)
+  best_k_r <- reactiveVal(NULL)
+  
+  set.seed(100)
   # --- Upload data ----
   data_user <- reactive({
     if (input$data_source == "pisaUSA15") {
-      df <- tidyLPA::pisaUSA15 %>% mutate(id_auto = paste0("id_", sprintf("%04d", 1:n())))
+      df <- tidyLPA::pisaUSA15%>% mutate(id_auto = paste0("id_", sprintf("%04d", 1:n())))
     } else if (input$data_source == "curry_mac") {
       df <- tidyLPA::curry_mac %>% mutate(id_auto = paste0("id_", sprintf("%04d", 1:n())))
       
@@ -16,13 +20,10 @@ server_lpa <- function(input, output, session) {
       req(input$datafile)
       ext <- tools::file_ext(input$datafile$name)
       df <- if (ext == "csv") read.csv(input$datafile$datapath) else read_excel(input$datafile$datapath)
-      df <- df %>% mutate(across(everything(), ~ifelse(.x == "", NA, .x)))
-      if (!"id" %in% tolower(names(df))) {
-        df <- df %>% mutate(id_auto = sprintf("id_%04d", 1:n()))
-        
-      }
+      df <- df %>% mutate(across(everything(), ~ifelse(.x == "", NA, .x)),
+                          id_auto = paste0("id_", sprintf("%04d", 1:n()))
+                          )
     }
-    
     return(na.omit(df))
   })
   observeEvent(input$data_source, {
@@ -47,78 +48,55 @@ server_lpa <- function(input, output, session) {
       HTML(desc_html)
     )
   })
-  
   # ---  ID ---
   output$id_select_ui <- renderUI({
     req(data_user())
-    selectizeInput(
+    selectInput(
       "id_vars",
       label = "Select ID Columns (Optional):",
       choices = names(data_user()),
       selected = names(data_user())[str_detect(names(data_user()), "id")],
-      multiple = TRUE,
-      options = list(placeholder = 'Choose one or more ID columns')
-    )
+      multiple = TRUE
+      )
   })
   
   # --- Pilih variabel ---
   output$var_select_ui <- renderUI({
     req(data_user())
-    selectizeInput(
+    selectInput(
       "selected_vars",
       label = "Select Variables for LPA:",
       choices = names(data_user()),
-      selected = names(data_user()%>% dplyr::select(-c(id_auto)))[1:min(5, ncol(data_user()))],
-      multiple = TRUE,
-      options = list(placeholder = 'Choose variables to include in analysis')
-    )
+      selected = names(data_user())[1:min(3, ncol(data_user()))],
+      multiple = TRUE 
+      )
   })
+  
+  observeEvent(c(input$data_source, input$datafile), {
+    updateSelectInput(session,"selected_vars",selected = "") 
+  }, ignoreInit = TRUE)
+  
   # --- Data preview ----
   output$data_preview <- renderDT({
-    req(data_user())
+    req(data_user(), input$selected_vars)
     df <- data_user() %>% 
       dplyr::select(input$selected_vars)
     numeric_cols <- which(sapply(df, function(x) is.numeric(x)))
-    #numeric_cols <- which(vapply(df, function(x) is.numeric(x) && length(x) > 0, logical(1)))
-
-#    datatable(df,
- #             extensions = 'Buttons',
-  #            options = list(dom='Brtp',scrollX = TRUE, pageLength = 25,  
-   #                          buttons = list(
-    #                           list(extend = 'csv',
-     #                               text = 'Export CSV',
-      #                              filename = 'Data LPA'
-       #                        ),
-        #                       list(extend = 'excel',
-         #                           text = 'Export Excel',
-          #                          filename = 'Data LPA'
-           #                    ))),
-   #   rownames = T) %>% 
-    #  formatRound(columns = numeric_cols, digits = 2)
-  #numeric_cols <- which(vapply(df, is.numeric, logical(1)))
-
-dt <- datatable(
-  df,
-  extensions = 'Buttons',
-  options = list(
-    dom = 'Brtp',
-    scrollX = TRUE,
-    pageLength = 25,
-    buttons = list(
-      list(extend = 'csv', text = 'Export CSV', filename = 'Data LPA'),
-      list(extend = 'excel', text = 'Export Excel', filename = 'Data LPA')
-    )
-  ),
-  rownames = TRUE
-)
-
-# Hanya formatRound jika benar-benar ada kolom numeric
-if (length(numeric_cols) > 0) {
-  dt <- dt %>% formatRound(columns = numeric_cols, digits = 2)
-}
-
-dt
-  })
+    datatable(df,
+              extensions = 'Buttons',
+              options = list(dom='Brtp',scrollX = TRUE, #pageLength = nrow(df),
+                             buttons = list(
+                               list(extend = 'csv',
+                                    text = 'Export CSV',
+                                    filename = 'Data LPA'
+                               ),
+                               list(extend = 'excel',
+                                    text = 'Export Excel',
+                                    filename = 'Data LPA'
+                               ))),
+      rownames = T) %>% 
+      formatRound(columns = numeric_cols, digits = 2)
+  }, server = FALSE)
 
   # --- Jalankan LPA ----
   observeEvent(input$run_lpa, {
@@ -132,15 +110,24 @@ dt
     min_k <- input$min_profiles
     max_k <- input$max_profiles
     model_type <- input$model_type
-    withProgress(message = "Running LPA Models...", value = 0, {
-        fitcompare <- tidyLPA::estimate_profiles(df, n_profiles = min_k:max_k, models = 1) %>% 
-          get_fit()
-        fitcompare <- as.data.frame(fitcompare) %>% dplyr::rename(n_profiles=Classes)
-        
-      showNotification("LPA analysis completed successfully!", type = "message")
+    model_type <- input$model_type
+    variances <- ifelse(input$model_type %in% c(1, 3), "equal", "varying")
+    covariances <- ifelse(input$model_type %in% c(1,2), "zero",
+                          ifelse(input$model_type %in% c(3), "equal", "varying"))
+    withProgress(message = "Running...", {
+      incProgress(1/(max_k-min_k+1), detail = paste("Compare LPA results"))
+      fitcompare <- tidyLPA::estimate_profiles(df, n_profiles = min_k:max_k,
+                                               variances=variances,
+                                               covariances=covariances
+                                               #models = c(1, 2, 3, 6)
+      ) %>%
+        get_fit()
+      fitcompare <- as.data.frame(fitcompare) %>% dplyr::rename(n_profiles=Classes)
+      showNotification("LPA completed successfully!", type = "message")
     })
     fitcompare
   })
+  
   models <- eventReactive(c(input$run_lpa,input$best_k), {
     req(data_user(), input$selected_vars, input$best_k)
     df <- data_user()[, input$selected_vars]
@@ -148,64 +135,66 @@ dt
     min_k <- input$min_profiles
     max_k <- input$max_profiles
     model_type <- input$model_type
-      model_list <- list()
-      for (k in input$best_k) {
-        model_list[[as.character(k)]] <- estimate_profiles(df, n_profiles = k, models = model_type)
-      }
-      model_list
+    variances <- ifelse(input$model_type %in% c(1, 3), "equal", "varying")
+    covariances <- ifelse(input$model_type %in% c(1,2), "zero",
+                          ifelse(input$model_type %in% c(3), "equal", "varying"))
+    model_list <- list()
+    for (k in input$best_k) {
+      model_list[[as.character(k)]] <- estimate_profiles(df, n_profiles = k,
+                                                         variances = variances,
+                                                         covariances = covariances)
+    }
+    model_list
   })
   
   # --- Fit table ----
   output$fit_table <- renderDT({
-    req(models())
-    #fit_stats <- purrr::map_df(models(), get_fit, .id = "n_profiles")
-    fitcompare <- fitcompare()%>% 
-      dplyr::mutate(across(LogLik:BLRT_p, ~round(.x, 3))) %>%
-      dplyr::select(-c(AWE, CAIC, CLC, KIC, SABIC, ICL))
-    min_AIC   <- min(fitcompare$AIC, na.rm = TRUE)
-    max_Entropy <- max(fitcompare$Entropy, na.rm = TRUE)
-    min_BIC   <- min(fitcompare$BIC, na.rm = TRUE)
-    datatable(fitcompare,extensions = 'Buttons',
-              options = list(dom='B',scrollX = TRUE, pageLength = 20,  
+    req(fitcompare())
+    fitcompare <- fitcompare() %>%
+      dplyr::mutate(across(where(is.numeric), ~round(.x, 3))) %>%
+      dplyr::select(-c(prob_min, prob_max,n_max, AWE, CAIC, CLC, KIC, SABIC, ICL))
+    
+    aic_vals <- sort(unique(fitcompare$AIC))
+    bic_vals <- sort(unique(fitcompare$BIC))
+    ent_vals <- sort(unique(fitcompare$Entropy), decreasing = TRUE)
+    
+    datatable(fitcompare, extensions = 'Buttons',
+              options = list(dom='B', scrollX = TRUE,
                              buttons = list(
-                               list(extend = 'csv',
-                                    text = 'Export CSV',
-                                    filename = 'FIT Comparison LPA'
-                               ),
-                               list(extend = 'excel',
-                                    text = 'Export Excel',
-                                    filename = 'FIT Comparison LPA'
-                               ))),
-              rownames = FALSE) %>% 
-      formatStyle(
-        columns = 'AIC',
-        color = styleEqual(min_AIC, 'black'),
-        backgroundColor = styleEqual(min_AIC, 'lightgreen'),
-        fontWeight = styleEqual(min_AIC, 'bold')
+                               list(extend='csv', text='Export CSV', filename='FIT Comparison LPA'),
+                               list(extend='excel', text='Export Excel', filename='FIT Comparison LPA')
+                             )),
+              rownames = FALSE) %>%
+      formatStyle('AIC',
+                  backgroundColor = styleEqual(
+                    c(aic_vals[1], aic_vals[2]),
+                    c('lightgreen', 'khaki')
+                  ),
+                  fontWeight = styleEqual(aic_vals[1], 'bold')
       ) %>%
-      formatStyle(
-        columns = 'BIC',
-        color = styleEqual(min_BIC, 'black'),
-        backgroundColor = styleEqual(min_BIC, 'lightgreen'),
-        fontWeight = styleEqual(min_BIC, 'bold')
+      formatStyle('BIC',
+                  backgroundColor = styleEqual(
+                    c(bic_vals[1], bic_vals[2]),
+                    c('lightgreen', 'khaki')
+                  ),
+                  fontWeight = styleEqual(bic_vals[1], 'bold')
       ) %>%
-      formatStyle(
-        columns = 'Entropy',
-        color = styleEqual(max_Entropy, 'black'),
-        backgroundColor = styleEqual(max_Entropy, 'lightgreen'),
-        fontWeight = styleEqual(max_Entropy, 'bold')
-      ) %>% 
-      formatStyle(
-        columns = 'n_min',
-        backgroundColor = styleInterval(0.07, c('lightcoral', 'lightgreen'))
-      ) %>% 
-      formatStyle(
-        columns = 'BLRT_p',
-        backgroundColor = styleInterval(0.05, c('lightgreen', 'lightcoral')),
-        fontWeight = styleInterval(0.05, c('bold', '')),
-        
+      formatStyle('Entropy',
+                  backgroundColor = styleEqual(
+                    c(ent_vals[1], ent_vals[2]),
+                    c('lightgreen', 'khaki')
+                  ),
+                  fontWeight = styleEqual(ent_vals[1], 'bold')
+      ) %>%
+      formatStyle('n_min',
+                  backgroundColor = styleInterval(0.07, c('lightcoral', 'lightgreen'))
+      ) %>%
+      formatStyle('BLRT_p',
+                  backgroundColor = styleInterval(0.05, c('lightgreen', 'lightcoral')),
+                  fontWeight = styleInterval(0.05, c('bold', ''))
       )
-  })
+  }, server = FALSE)
+  
   
   # --- Fit plot (AIC/BIC) ---
   fit_plot_reactive <- reactive({
@@ -214,7 +203,7 @@ dt
     
     # fit_stats <- map_df(models(), get_fit, .id = "n_profiles") %>%
     #   dplyr::select(n_profiles, AIC, BIC) %>% dplyr::mutate(n_profiles = as.numeric(n_profiles))
-    fitcompare <- fitcompare() %>% 
+    fitcompare <- fitcompare() %>%
       dplyr::select(n_profiles, AIC, BIC) %>% dplyr::mutate(n_profiles = as.numeric(n_profiles))
     fit_long <- fitcompare %>%
       pivot_longer(-n_profiles, names_to = "Index", values_to = "Value")
@@ -223,7 +212,7 @@ dt
       geom_line(size = 1.2) + geom_point(size = 3) +
       geom_text(aes(label = round(Value, 2)), vjust = -0.6, size = 3) +
       labs(title = "Model Comparison (AIC & BIC)", x = "Number of Profiles", y = "Fit Index") +
-      theme_minimal(base_size = 14) + 
+      theme_minimal(base_size = 14) +
       theme(legend.position = "bottom", axis.line = element_line(color = "black"))
   })
   
@@ -232,7 +221,7 @@ dt
     # req(models())
     req(fitcompare())
     
-    stats <- fitcompare() %>% 
+    stats <- fitcompare() %>%
       dplyr::select(n_profiles, Entropy, n_min) %>% dplyr::mutate(n_profiles = as.numeric(n_profiles))
     # stats <- map_df(models(), get_fit, .id = "n_profiles")
     ggplot(stats, aes(x = as.numeric(n_profiles))) +
@@ -243,7 +232,7 @@ dt
       geom_point(aes(y = n_min, color = "Smallest Class Size"), size = 3) +
       geom_text(aes(y = n_min, label = round(n_min, 3)), vjust = -0.8, size = 3.5) +
       labs(title = "Entropy and Smallest Class Size per Model", x = "Number of Profiles", y = "Value") +
-      theme_minimal(base_size = 14) + 
+      theme_minimal(base_size = 14) +
       theme(legend.position = "bottom", axis.line = element_line(color = "black"))
     
   })
@@ -372,14 +361,14 @@ dt
                                    list(
                                      extend = 'csv',
                                      text = 'Export CSV',
-                                     filename = paste0('Summary LPA')  
+                                     filename = paste0('Summary LPA')
                                    ),
                                    list(
                                      extend = 'excel',
                                      text = 'Export Excel',
                                      filename = paste0('Summary LPA')
-                                   ))), 
-                  rownames = FALSE) 
+                                   ))),
+                  rownames = FALSE)
   })
   
   
@@ -394,9 +383,9 @@ dt
     df$Profile <- factor(cluster, labels = profile_names)
     df_out <- df[, c(id_cols, input$selected_vars, "Profile")]
     numeric_cols <- which(sapply(df_out, is.numeric))
-    datatable(df_out, 
+    datatable(df_out,
               extensions = 'Buttons',
-              options = list(dom='Brtp',scrollX = TRUE, pageLength = 25,  
+              options = list(dom='Brtp',scrollX = TRUE, pageLength = 25,
                              buttons = list(
                                list(extend = 'csv',
                                     text = 'Export CSV',
@@ -405,9 +394,9 @@ dt
                                list(extend = 'excel',
                                     text = 'Export Excel',
                                     filename = 'Data Profile LPA'
-                               ))), 
-              rownames = T) %>% 
+                               ))),
+              rownames = T) %>%
       formatRound(columns = numeric_cols, digits = 3)
-  })
-   
+  }, server = FALSE)
+  
 }

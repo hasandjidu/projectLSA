@@ -86,7 +86,7 @@ lca_ui <- function(project) {
       sidebarLayout(
         sidebarPanel(
           width = 2, 
-          numericInput("best_class_lca", "Select the Best Number of Class:", 3, min = 1),
+          numericInput("best_class_lca",label =  "Select the Best Number of Class:",value = 3, min = 1),
           uiOutput("class_name_inputs_lca")
         ),
         mainPanel(

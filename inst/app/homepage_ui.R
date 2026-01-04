@@ -24,8 +24,8 @@ homepage_ui <- function() {
   ",
               HTML(
                 '<strong>How to Cite:</strong> 
-                 Djidu, H., Retnawati, H., Hadi, S., Haryanto (2025). <em>projectLSA: An R Shiny application for latent structure analysis with a graphical user interface</em>. 
-                 <a href="https://measure.shinyapps.io/ProjectLSA/" target="_blank">https://measure.shinyapps.io/ProjectLSA/</a>'
+                 Djidu, H., Retnawati, H., Hadi, S., Haryanto (2025). <em>projectLSA: R Shiny application for latent structure analysis with a graphical user interface</em>. 
+                 <a href="https://doi.org/10.32614/CRAN.package.projectLSA" target="_blank">https://doi.org/10.32614/CRAN.package.projectLSA/</a>'
               )
             )
             

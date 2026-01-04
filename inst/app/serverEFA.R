@@ -63,7 +63,7 @@ server_efa <- function(input, output, session) {
                        ))),
       rownames = FALSE
     )
-  })
+  }, server = FALSE)
   
   
   # === Ketika user memilih CFA ===

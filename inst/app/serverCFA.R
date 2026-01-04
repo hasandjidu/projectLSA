@@ -63,7 +63,7 @@ server_cfa <- function(input, output, session) {
                                  filename = paste0('Data CFA')
                                ))), rownames = T) %>% 
       formatRound(columns = numeric_cols, digits = 2)
-  })
+  }, server = FALSE)
   
   
   # ===== CFA MODEL =====
@@ -484,7 +484,7 @@ server_cfa <- function(input, output, session) {
                                  filename = paste0('Factor Scores')
                                )))) %>%
       formatRound(columns = numeric_cols, digits = 3)
-  })
+  }, server = FALSE)
   
   # Helper function untuk menentukan status fit ======
   get_fit_status <- function(chisq,df, pvalue, rmsea, cfi, srmr,gfi) {
@@ -555,7 +555,7 @@ server_cfa <- function(input, output, session) {
       formatStyle(columns = 'StdLoading',
                   fontWeight = 'bold',
                   color = styleInterval(c(0.3, 0.5, 0.7), c('red', 'orange', 'blue', 'green')) )
-  })
+  }, server = FALSE)
   
   # Modification indices
   mi_df <- reactive({
@@ -602,7 +602,7 @@ server_cfa <- function(input, output, session) {
       "}"
     )))    %>% 
       formatRound(columns = which(sapply(display_mi, is.numeric)), digits = 3)
-  })
+  }, server = FALSE)
   
   # Handle MI button clicks
   observeEvent(input$mi_selected, {

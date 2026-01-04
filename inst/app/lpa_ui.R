@@ -39,8 +39,8 @@ lpa_ui <- function(project) {
             choices = list(
               "Model 1: Equal variances, covariances fixed to 0" = 1,
               "Model 2: Varying variances, covariances fixed to 0" = 2,
-              "Model 3: Equal variances, covariances varying" = 3,
-              "Model 6: Varying variances and covariances" = 6
+              "Model 3: Equal variances & covariances" = 3,
+              "Model 6: Varying variances & covariances" = 6
             ),
             selected = 1
           ),
@@ -100,7 +100,7 @@ lpa_ui <- function(project) {
       sidebarLayout(
         sidebarPanel(
           width = 2, 
-          numericInput("best_k", "Select the Best Number of Profiles:", 3, min = 1),
+          numericInput("best_k", label = "Select the Best Number of Profiles:",value = 3, min = 1),
           uiOutput("profile_name_inputs")
         ),
         mainPanel(
@@ -109,7 +109,7 @@ lpa_ui <- function(project) {
           
           h5(icon("project-diagram"), "Profile Plot of the Best Model"),
           downloadButton("download_plot_best_LPA", "Download Plot Best Model (.png)"),
-          plotOutput("best_model_plot", width = '100%'),
+          plotOutput("best_model_plot", height = "450px"),
           br(),
           
           div(
