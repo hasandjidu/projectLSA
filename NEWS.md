@@ -1,4 +1,4 @@
-# projectLSA 0.0.4
+# projectLSA 0.0.5
 
 * Documentation updated and expanded, including README.Rmd, README.md, and rendered README.html.
 * Figures reorganized and updated to improve clarity of methodological workflows.
