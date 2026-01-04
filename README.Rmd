@@ -90,30 +90,20 @@ This opens the full Shiny application, including all LSA modules, data upload, b
 
 ### LPA (Latent Profile Analysis)
 
-![LPA1](man/figures/LPA1.png)
 ![LPA3](man/figures/LPA3.png)
 ![LPA4](man/figures/LPA4.png)
 
 ### LCA (Latent Class Analysis)
-![LCA1](man/figures/LCA1.png)
 ![LCA2](man/figures/LCA2.png)
 ![LCA3](man/figures/LCA3.png)
-### CFA (Confirmatory Factor Analysis)
-![CFA3](man/figures/CFA3.png)
+### CFA (Confirmatory Factor Analysis) &  SEM (Structural Equation Modelling)
 ![CFA4](man/figures/CFA4.png)
-![CFA5](man/figures/CFA5.png)
-![CFA6](man/figures/CFA6.png)
 ![CFA7](man/figures/CFA7.png)
-### SEM (Structural Equation Modelling)
-
 ![SEM](man/figures/SEM.png)
 
 ### LTA (Latent Trait Analysis/ IRT)
 
-![LTA1](man/figures/LTA1.png)
-![LTA2](man/figures/LTA2.png)
 ![LTA3](man/figures/LTA3.png)
-![LTA4](man/figures/LTA4.png)
 ![LTA6](man/figures/LTA6.png)
 
 ---
