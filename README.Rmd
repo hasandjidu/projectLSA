@@ -37,7 +37,7 @@ All analyses can be performed **without writing any code**, making the package a
 install.packages("projectLSA")
 
 # Install development version from GitHub (optional)
-# remotes::install_github("hasandjidu/projectLSA")
+remotes::install_github("hasandjidu/projectLSA")
 ```
 
 ---
