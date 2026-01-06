@@ -16,5 +16,3 @@ run_projectLSA <- function() {
   }
   shiny::runApp(app_dir, launch.browser = TRUE)
 }
-
-

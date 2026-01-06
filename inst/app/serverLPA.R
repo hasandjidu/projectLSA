@@ -1,10 +1,7 @@
 # ==== server_lpa.R ====
-
 server_lpa <- function(input, output, session) {
   library(tidyLPA)
   library(mclust)
-  best_k_r <- reactiveVal(NULL)
-  
   set.seed(100)
   # --- Upload data ----
   data_user <- reactive({
@@ -110,7 +107,6 @@ server_lpa <- function(input, output, session) {
     min_k <- input$min_profiles
     max_k <- input$max_profiles
     model_type <- input$model_type
-    model_type <- input$model_type
     variances <- ifelse(input$model_type %in% c(1, 3), "equal", "varying")
     covariances <- ifelse(input$model_type %in% c(1,2), "zero",
                           ifelse(input$model_type %in% c(3), "equal", "varying"))
@@ -151,7 +147,7 @@ server_lpa <- function(input, output, session) {
   output$fit_table <- renderDT({
     req(fitcompare())
     fitcompare <- fitcompare() %>%
-      dplyr::mutate(across(where(is.numeric), ~round(.x, 3))) %>%
+      dplyr::mutate(across(where(is.numeric), ~round(.x, 4))) %>%
       dplyr::select(-c(prob_min, prob_max,n_max, AWE, CAIC, CLC, KIC, SABIC, ICL))
     
     aic_vals <- sort(unique(fitcompare$AIC))
@@ -315,8 +311,8 @@ server_lpa <- function(input, output, session) {
     
     # --- Ukuran kelas ---
     class_size <- df %>%
-      count(Profile) %>%
-      mutate(Percent = round(100 * n / sum(n), 2))
+      dplyr::count(Profile) %>%
+      dplyr::mutate(Percent = round(100 * n / sum(n), 2))
     
     # --- Hitung Mean dan SD lalu gabungkan jadi satu kolom ---
     summary_stats <- df %>%
