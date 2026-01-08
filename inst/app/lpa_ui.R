@@ -100,7 +100,7 @@ lpa_ui <- function(project) {
              plotOutput("fit_aic"),height = "200px"),
       column(6, h5(icon("chart-bar"), "Entropy Comparison"), 
              plotOutput("fit_entropy"),height = "200px"),
-      column(6, h5(icon("chart-bar"), "Class Size Comparison"), 
+      column(6, h5(icon("chart-bar"), "Min. Class Size Comparison"), 
              plotOutput("fit_class_size"),height = "200px")
       )
     ),

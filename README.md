@@ -104,9 +104,15 @@ upload, built-in datasets, interactive plots, and reporting features.
 
 ### LCA (Latent Class Analysis)
 
+<<<<<<< HEAD
 ![LCA2](man/figures/LCA2.png) ![LCA3](man/figures/LCA3.png) 
 
 ### CFA (Confirmatory Factor Analysis) & SEM (Structural Equation Modelling)
+=======
+![LCA2](man/figures/LCA2.png) ![LCA3](man/figures/LCA3.png)
+
+### CFA (Confirmatory Factor Analysis) & SEM (Structural Equation Modelling)
+
 ![CFA4](man/figures/CFA4.png) ![CFA7](man/figures/CFA7.png)
 ![SEM](man/figures/SEM.png)
 

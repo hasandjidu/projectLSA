@@ -18,11 +18,11 @@ lca_ui <- function(project) {
             "data_source_lca", 
             "Select Data Source:",
             choices = c("Upload Data" = "upload",
-                        "Simulation Data 3" = "simdata3class",
-                        "Simulation Data 4" = "simdata4class",
-                        "Simulation Data 5" = "simdata5class",
-                        "Simulation Data 6" = "simdata6class",
-                        "Simulation Data 7" = "simdata7class"
+                        "Simulation Data 1" = "simdata3class",
+                        "Simulation Data 2" = "simdata4class",
+                        "Simulation Data 3" = "simdata5class",
+                        "Simulation Data 4" = "simdata6class",
+                        "Simulation Data 5" = "simdata7class"
                         
                         ),
             selected = "upload"
@@ -47,7 +47,10 @@ lca_ui <- function(project) {
         mainPanel(
           width = 9,
           h5(icon("table"), "Data Preview"),
-          DTOutput("data_preview_lca")
+          DTOutput("data_preview_lca"),
+          DTOutput("data_summary_lca")
+          
+          
         )
       )
     ),
@@ -69,11 +72,11 @@ lca_ui <- function(project) {
                )
                
         ),
-        column(6, h5(icon("chart-bar"), "AIC & BIC Comparison"), 
+        column(5, h5(icon("chart-bar"), "AIC & BIC Comparison"), 
                downloadButton("download_plot_AicBic_LCA", "Download Plot AIC/BIC (.png)"),
                plotOutput("fit_plot_lca")
                ),
-        column(6, h5(icon("sliders-h"), "Smallest Class Size"), 
+        column(7, h5(icon("sliders-h"), "Min Class Size Comparison"), 
                downloadButton("download_plot_classSize_LCA", "Download PLot Smallest Class Size (.png)"),
                plotOutput("smallest_class_plot_lca",width = '100%')
                )

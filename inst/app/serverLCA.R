@@ -4,26 +4,26 @@ server_lca <- function(input, output, session) {
   library(tidyverse)
   library(ggiraph)
   best_c_r <- reactiveVal(NULL)
-  
+  set.seed(100)
 observeEvent(input$run_lca, {
   req(data_lca(), input$vars_lca)
   updateTabsetPanel(session, "main_tab_lca", selected = "fit_tab_lca")
 })
 data_lca <- reactive({
   if (input$data_source_lca == "simdata3class") {
-    df <- poLCA::poLCA.simdata(N=2000, nclass=3,ndv=3)$dat %>% rownames_to_column("id_auto")
+    df <- get("cheating", envir = asNamespace("poLCA")) %>% rownames_to_column("id_auto")
     
   } else if (input$data_source_lca == "simdata4class") {
-    df <- poLCA::poLCA.simdata(N=3000, nclass=4,ndv=4)$dat%>% rownames_to_column("id_auto")
+    df <- poLCA::poLCA.simdata(N=3000, nclass=3,ndv=5)$dat%>% rownames_to_column("id_auto")
     
   } else if(input$data_source_lca == "simdata5class") {
-    df <- poLCA::poLCA.simdata(N=4000, nclass=5,ndv=5)$dat%>% rownames_to_column("id_auto")
+    df <- poLCA::poLCA.simdata(N=4000, nclass=4,ndv=5)$dat%>% rownames_to_column("id_auto")
     
   } else if (input$data_source_lca == "simdata6class") {
-    df <- poLCA::poLCA.simdata(N=5000, nclass=6,ndv=6)$dat%>% rownames_to_column("id_auto")
+    df <- poLCA::poLCA.simdata(N=5000, nclass=4,ndv=6)$dat%>% rownames_to_column("id_auto")
     
   } else if (input$data_source_lca == "simdata7class") {
-    df <- poLCA::poLCA.simdata(N=6000, nclass=7,ndv=7)$dat%>% rownames_to_column("id_auto")
+    df <- poLCA::poLCA.simdata(N=6000, nclass=4,ndv=7)$dat%>% rownames_to_column("id_auto")
     
   } else {
     req(input$datafile_lca)
@@ -85,6 +85,39 @@ output$data_preview_lca <- DT::renderDT({
     formatRound(columns = numeric_cols, digits = 0)
 }, server = FALSE)
 
+
+output$data_summary_lca <- DT::renderDT({
+  req(data_lca(), input$vars_lca)
+  df <- data_lca() %>% dplyr::select(input$vars_lca)
+  # Pastikan semuanya character (aman untuk join)
+  df_chr <- df %>% dplyr::mutate(across(everything(), as.character))
+  # Buat kolom join (kombinasi respons)
+  df_chr$Respon <- apply(df_chr, 1, paste0, collapse = "-")
+  
+  # Tabel frekuensi
+  freq_table <- df_chr %>%
+    dplyr::count(Respon, name = "Freq") %>%
+    dplyr::mutate(
+      Percent = round(100 * Freq / sum(Freq), 2)
+    ) %>%
+    dplyr::arrange(dplyr::desc(Freq))
+  
+  DT::datatable(freq_table,extensions = 'Buttons',
+                options = list(scrollX = TRUE, dom = 'Bt',
+                               buttons = list(
+                                 list(
+                                   extend = 'csv',
+                                   text = 'Export CSV',
+                                   filename = paste0('Data LCA')  
+                                 ),
+                                 list(
+                                   extend = 'excel',
+                                   text = 'Export Excel',
+                                   filename = paste0('Data LCA')
+                                 ))),
+                rownames = TRUE)
+}, server = FALSE)
+
 # ==== Fit LCA ====
 lca_models <- eventReactive(input$run_lca, {
   req(data_lca(), input$vars_lca)
@@ -119,10 +152,13 @@ APCP_poLCA <- function(fit) {
   
   APCP_overall <- mean(post[cbind(1:nrow(post), cls)])
   APCP_byclass <- mean(APCP_class)
+  min_Prob <- min(post[cbind(1:nrow(post), cls)])
+  
   list(
     APCP_per_class = APCP_class,
     APCP_overall  = APCP_overall,
-    APCP_byClass = APCP_byclass
+    APCP_byClass = APCP_byclass,
+    min_Prob = min_Prob
   )
 }
 entropy_poLCA <- function(fit) {
@@ -141,7 +177,7 @@ fit_lca <- reactive({
   req(lca_models())
   set.seed(123)
   fit <- data.frame(N_class=integer(), AIC=numeric(), BIC=numeric(), Gsq=numeric(), Chisq=numeric(), resid.df=numeric(), 
-                    Entropy =numeric(), APCP_byClass=numeric(), APCP_overall=numeric())
+                    Entropy =numeric(), APCP_byClass=numeric(), APCP_overall=numeric(), Min_Prob = numeric())
   for(k in names(lca_models())){
     m <- lca_models()[[k]]
     if(!is.null(m)){
@@ -151,10 +187,12 @@ fit_lca <- reactive({
         BIC = round(m$bic,3),
         Gsq = round(m$Gsq,3),
         Chisq = round(m$Chisq,3),
-        resid.df = m$resid.df,
-        Entropy = round(entropy_poLCA(m),3) ,
-        APCP =round(APCP_poLCA(m)$APCP_byClass,3)
+        Resid.df = m$resid.df,
+        #Entropy = round(entropy_poLCA(m),3) ,
+        # Entropy = poLCA.entropy(m),
         #APCP_overall =round(APCP_poLCA(m)$APCP_overall,3) 
+        Min_Prob = round(APCP_poLCA(m)$min_Prob,3),
+        Av_Prob = round(APCP_poLCA(m)$APCP_byClass,3)
       ))
     }
   }
@@ -167,8 +205,10 @@ output$fit_table_lca <- renderDT({
     #max_APCP_overall  <- max(df$APCP_overall, na.rm = TRUE)
     aic_vals <- sort(unique(df$AIC))
     bic_vals <- sort(unique(df$BIC))
-    ent_vals <- sort(unique(df$Entropy), decreasing = TRUE)
-    apcp_vals  <- sort(unique(df$APCP), decreasing = TRUE)
+   # ent_vals <- sort(unique(df$Entropy), decreasing = TRUE)
+    apcp_vals  <- sort(unique(df$Av_Prob), decreasing = TRUE)
+    min_prob_vals  <- sort(unique(df$Min_Prob), decreasing = TRUE)
+    
   
     DT::datatable(df,extensions = 'Buttons',
                   options = list(scrollX = TRUE, dom = 'B',
@@ -198,19 +238,26 @@ output$fit_table_lca <- renderDT({
                   ),
                   fontWeight = styleEqual(bic_vals[1], 'bold')
       ) %>%
-      formatStyle('Entropy',
-                  backgroundColor = styleEqual(
-                    c(ent_vals[1], ent_vals[2]),
-                    c('lightgreen', 'khaki')
-                  ),
-                  fontWeight = styleEqual(ent_vals[1], 'bold')
-      ) %>%
-      formatStyle('APCP',
+      # formatStyle('Entropy',
+      #             backgroundColor = styleEqual(
+      #               c(ent_vals[1], ent_vals[2]),
+      #               c('lightgreen', 'khaki')
+      #             ),
+      #             fontWeight = styleEqual(ent_vals[1], 'bold')
+      # ) %>%
+      formatStyle('Av_Prob',
                   backgroundColor = styleEqual(
                     c(apcp_vals[1], apcp_vals[2]),
                     c('lightgreen', 'khaki')
                   ),
-                  fontWeight = styleEqual(ent_vals[1], 'bold')
+                  fontWeight = styleEqual(apcp_vals[1], 'bold')
+      ) %>% 
+      formatStyle('Min_Prob',
+                  backgroundColor = styleEqual(
+                    c(min_prob_vals[1], min_prob_vals[2]),
+                    c('lightgreen', 'khaki')
+                  ),
+                  fontWeight = styleEqual(min_prob_vals[1], 'bold')
       )
 }, server = FALSE)
 
@@ -268,8 +315,8 @@ smallest_class_plot_lca_reactive <- reactive({
   # Plot bar horizontal
   ggplot(smallest_df, aes(x = model, y = Percent, fill = model)) +
     geom_col(width = 0.5) +
-    geom_text(aes(label = paste0(Percent, "%[n=", N, "]")), hjust = 0, size = 4) +
-    coord_flip() +
+    geom_text(aes(label = paste0(Percent, "%")), size = 4) +
+   # coord_flip() +
     scale_y_continuous(limits = c(0, max(smallest_df$Percent)+18)) +
     labs(x = "Model", y = "Percentage") +
     theme_minimal(base_size = 14) +
@@ -527,9 +574,20 @@ output$profile_table_lca <- renderDT({
   df$Class <- model_k$predclass
   df$Class <- class_names[df$Class]
   
-  df <- df[, c(id_cols, input$vars_lca, "Class")]
+  #df <- df[, c(id_cols, input$vars_lca, "Class")]
+  # --- Posterior probabilities ---
+  posterior_df <- as.data.frame(round(model_k$posterior,2))
+  colnames(posterior_df) <- paste0("Posterior_Prob_", class_names)
+  numeric_cols <- which(sapply(posterior_df, is.numeric))
   
-  numeric_cols <- which(sapply(df, is.numeric))
+  # Gabungkan: ID + vars + posterior + Class
+  df <- cbind(
+    df[, c(id_cols, input$vars_lca)],
+    posterior_df,
+    Class = df$Class
+  )
+  # Buat kolom join (kombinasi respons)
+  
   DT::datatable(df,extensions = 'Buttons',
                 options = list(scrollX = TRUE, pageLength=25,
                                dom = 'Brtp',
@@ -544,8 +602,7 @@ output$profile_table_lca <- renderDT({
                                    text = 'Export Excel',
                                    filename = paste0('LCA Result with', input$best_class_lca, ' Classes')
                                  ))),
-                rownames = TRUE) %>%
-    formatRound(columns = numeric_cols, digits = 2)
+                rownames = TRUE)
   
 }, server = FALSE)
 
