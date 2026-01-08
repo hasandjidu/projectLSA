@@ -11,3 +11,4 @@ docs
 .Rapp.history
 *.dat
 *.inp
+README.knit.md
