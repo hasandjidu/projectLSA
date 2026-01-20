@@ -1,3 +1,6 @@
+# projectLSA 0.0.7
+* Minor refinements to the Shiny application codebase to support the new exploratory functionality
+
 # projectLSA 0.0.6
 
 * Extended and enhanced the Latent Class Analysis (LCA) and Latent Profile Analysis (LPA) modules with additional tools for in-depth result exploration.
