@@ -9,8 +9,6 @@ output: github_document
 [![Downloads](https://cranlogs.r-pkg.org/badges/projectLSA)](https://cranlogs.r-pkg.org/badges/projectLSA)
 [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/projectLSA)](https://cranlogs.r-pkg.org/badges/grand-total/projectLSA)
 
-[![R-CMD-check](https://github.com/hasandjidu/projectLSA/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hasandjidu/projectLSA/actions/workflows/R-CMD-check.yaml)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
@@ -37,7 +35,7 @@ All analyses can be performed **without writing any code**, making the package a
 install.packages("projectLSA")
 
 # Install development version from GitHub (optional)
-remotes::install_github("hasandjidu/projectLSA")
+remotes::install_github("hdmeasure/projectLSA")
 ```
 
 ---
@@ -114,7 +112,7 @@ This opens the full Shiny application, including all LSA modules, data upload, b
 If you use projectLSA in publications, please cite:
 
 Djidu, H., Retnawati, H., Hadi, S., & Haryanto (2026).
-*projectLSA:R Shiny application for latent structure analysis with a graphical user interface. https://doi.org/10.32614/CRAN.package.projectLSA*
+*projectLSA:Shiny application for latent structure analysis with a graphical user interface. https://doi.org/10.32614/CRAN.package.projectLSA*
 
 ---
 
@@ -122,7 +120,7 @@ Djidu, H., Retnawati, H., Hadi, S., & Haryanto (2026).
 
 Bug reports and feature requests are welcome:
 
-https://github.com/hasandjidu/projectLSA/issues
+https://github.com/hdmeasure/projectLSA/issues
 
 ---
 

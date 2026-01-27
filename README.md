@@ -9,8 +9,6 @@ status](https://www.r-pkg.org/badges/version/projectLSA)](https://CRAN.R-project
 [![Total
 Downloads](https://cranlogs.r-pkg.org/badges/grand-total/projectLSA)](https://cranlogs.r-pkg.org/badges/grand-total/projectLSA)
 
-[![R-CMD-check](https://github.com/hasandjidu/projectLSA/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hasandjidu/projectLSA/actions/workflows/R-CMD-check.yaml)
-
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Lifecycle:
@@ -41,7 +39,7 @@ package accessible for researchers, students, and applied analysts.
 install.packages("projectLSA")
 
 # Install development version from GitHub (optional)
-remotes::install_github("hasandjidu/projectLSA")
+remotes::install_github("hdmeasure/projectLSA")
 ```
 
 ------------------------------------------------------------------------
@@ -104,11 +102,6 @@ upload, built-in datasets, interactive plots, and reporting features.
 
 ### LCA (Latent Class Analysis)
 
-<<<<<<< HEAD
-![LCA2](man/figures/LCA2.png) ![LCA3](man/figures/LCA3.png) 
-
-### CFA (Confirmatory Factor Analysis) & SEM (Structural Equation Modelling)
-=======
 ![LCA2](man/figures/LCA2.png) ![LCA3](man/figures/LCA3.png)
 
 ### CFA (Confirmatory Factor Analysis) & SEM (Structural Equation Modelling)
@@ -126,8 +119,8 @@ upload, built-in datasets, interactive plots, and reporting features.
 
 If you use projectLSA in publications, please cite:
 
-Djidu, H., Retnawati, H., Hadi, S., & Haryanto (2026). *projectLSA:R
-Shiny application for latent structure analysis with a graphical user
+Djidu, H., Retnawati, H., Hadi, S., & Haryanto (2026). *projectLSA:Shiny
+application for latent structure analysis with a graphical user
 interface. <https://doi.org/10.32614/CRAN.package.projectLSA>*
 
 ------------------------------------------------------------------------
@@ -136,7 +129,7 @@ interface. <https://doi.org/10.32614/CRAN.package.projectLSA>*
 
 Bug reports and feature requests are welcome:
 
-<https://github.com/hasandjidu/projectLSA/issues>
+<https://github.com/hdmeasure/projectLSA/issues>
 
 ------------------------------------------------------------------------
 

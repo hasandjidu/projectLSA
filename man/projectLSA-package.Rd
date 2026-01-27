@@ -23,15 +23,15 @@ full interactive application.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/hasandjidu/projectLSA}
-  \item Report bugs at \url{https://github.com/hasandjidu/projectLSA/issues}
+  \item \url{https://github.com/hdmeasure/projectLSA}
+  \item Report bugs at \url{https://github.com/hdmeasure/projectLSA/issues}
 }
 
 
 Useful links:
 \itemize{
-  \item \url{https://github.com/hasandjidu/projectLSA}
-  \item Report bugs at \url{https://github.com/hasandjidu/projectLSA/issues}
+  \item \url{https://github.com/hdmeasure/projectLSA}
+  \item Report bugs at \url{https://github.com/hdmeasure/projectLSA/issues}
 }
 
 }
